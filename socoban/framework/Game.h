@@ -6,7 +6,7 @@
 //게임과 관련된 데이터를 초기화합니다.
 ///</summary>
 ///<return> 정상적으로 초기화 했으면 true , 아니면 false</return>
-bool Initailize();
+bool Initialize();
 
 
 /// <summary>

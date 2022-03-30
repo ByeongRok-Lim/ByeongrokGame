@@ -5,7 +5,7 @@
 
 static char s_map[MAP_SIZE][MAP_SIZE] = {
 	"*************",
-	"* sokodomo  *",
+	"* sokoban   *",
 	"*************"
 };
 static HANDLE s_consoleHandle;
