@@ -6,6 +6,7 @@ static int32_t s_goalCount = 0;		//목표갯수
 static int32_t s_boxOnGoalCount = 0;	//현재 맞는 갯수
 static int32_t s_playerX = 0;	//플레이어 좌표 x
 static int32_t s_playerY = 0;	//플레이어 좌표 y
+static EStageLevel stage;
 
 
 bool parseMapType(int i, int j, char mapType)
@@ -112,6 +113,8 @@ void UpdateStage()
 	//입력에 대해서 처리를 함.
 	//게임이 클리어 됐는지도 파악함.
 }
+
+
 // 1. 소코반 게임 완성
 // 2. 스테이지 여러 개 추가
 // 3. 연출 넣어보기 = > advanced
