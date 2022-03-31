@@ -8,6 +8,7 @@
 #include "Game.h"
 #include "Renderer.h"
 #include "input.h"
+#include "Timer.h"
 /*************************************************************
 * 설명 : 게임과 관련된 데이터를 초기화 하는 함수.
 **************************************************************/
@@ -17,6 +18,7 @@ bool Initialize()
 	{
 		return false;
 	}
+	InitializeTimer();
 	return true;
 }
 
@@ -27,24 +29,28 @@ void processInput()
 
 void update()
 {
+	//0.5초 간격으로 특정 메시지를 깜빡이기.
+	
+	//float xTime = 1.0;
+	//float oTime = 2.0;
 
-	if (GetButton(KEYCODE_W))
-	{
-		SetKeyMessage(KEYCODE_W);
-	}	
-	else if (GetButton(KEYCODE_D))
-	{
-		SetKeyMessage(KEYCODE_D);
-	}	
-	else if (GetButton(KEYCODE_S))
-	{
-		SetKeyMessage(KEYCODE_S);
-	}	
-	else if (GetButton(KEYCODE_A))
-	{
-		SetKeyMessage(KEYCODE_A);
-	}	
+	//static float delta = 0.0;
+	//delta += GetDeltaTime();
+
+	//if (delta >= xTime)
+	//{
+	//	SetMessage("뭐라 그러는 거냐");
+
+	//}
+
+	//if (delta >= xTime + oTime)
+	//{
+	//	delta = 0.0;
+	//}
+
+	
 }
+
 
 void render()
 {
@@ -59,6 +65,9 @@ int32_t Run()
 	//Game Loop의 전체를 Frame
 	while (true)
 	{
+		UpdateTimer();
+		//프레임 시작 ------- 다음프레임 시작
+		//				↑ 여기가 델타 타임
 		//입력처리
 		processInput();
 		//업데이트

@@ -145,6 +145,7 @@
     <ClCompile Include="framework\Game.c" />
     <ClCompile Include="framework\input.c" />
     <ClCompile Include="framework\Renderer.c" />
+    <ClCompile Include="framework\Timer.c" />
     <ClCompile Include="main.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -156,6 +157,7 @@
     <ClInclude Include="framework\Game.h" />
     <ClInclude Include="framework\input.h" />
     <ClInclude Include="framework\Renderer.h" />
+    <ClInclude Include="framework\Timer.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

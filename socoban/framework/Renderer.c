@@ -45,6 +45,7 @@ bool InitializeRenderer()
 }
 
 
+
 /*************************************************************
 * 설명 : 맵을 그리는 함수
 **************************************************************/
@@ -55,9 +56,9 @@ void RenderMap()
 	SetConsoleCursorPosition(s_consoleHandle, initialPos);	//지정된 콘솔 화면 버퍼에서 커서 위치를 설정
 	SetConsoleCursorInfo(s_consoleHandle, &info);	// 콘솔 커서의 형태 (두께 or 노출여부) 를 설정하는 역할
 
-	//memcpy(s_map, s_backBuffer, sizeof(s_map));
 
-	for (size_t i = 0; i < MAP_SIZE; i++)
+
+	for (size_t i = 0; i < MAP_SIZE; ++i)
 	{
 		puts(s_map[i]);		//초당 MAP_SIZE만큼 출력
 		
@@ -66,6 +67,10 @@ void RenderMap()
 	
 }
 
+void SetMessage(const char* message)
+{
+	strcpy_s(s_map[0], MAP_SIZE, message);
+}
 
 void SetKeyMessage(int32_t keyCode)
 {
