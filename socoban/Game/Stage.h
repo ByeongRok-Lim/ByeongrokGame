@@ -8,7 +8,7 @@
 typedef enum MapType
 {
 	MAPTYPE_WALL = '#',
-	MAPTYPE_PALYER = 'P',
+	MAPTYPE_PLAYER = 'P',
 	MAPTYPE_BOX = 'a',
 	MAPTYPE_GOAL = 'O',
 	MAPTYPE_BOX_ON_GOAL = '@',
