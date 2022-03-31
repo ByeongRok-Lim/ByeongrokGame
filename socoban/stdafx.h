@@ -17,3 +17,4 @@
 #include <stdint.h>
 #include <stdbool.h> //논리 대수를 저장하는 타입;
 #include <Windows.h>
+#include "Macro.h"

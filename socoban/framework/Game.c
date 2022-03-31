@@ -9,6 +9,7 @@
 #include "Renderer.h"
 #include "input.h"
 #include "Timer.h"
+#include "../Game/Stage.h";
 /*************************************************************
 * 설명 : 게임과 관련된 데이터를 초기화 하는 함수.
 **************************************************************/
@@ -19,6 +20,8 @@ bool Initialize()
 		return false;
 	}
 	InitializeTimer();
+
+	LoadStage(STAGE_01);
 	return true;
 }
 
@@ -29,6 +32,7 @@ void processInput()
 
 void update()
 {
+	UpdateStage();
 	//0.5초 간격으로 특정 메시지를 깜빡이기.
 	
 	//float xTime = 1.0;

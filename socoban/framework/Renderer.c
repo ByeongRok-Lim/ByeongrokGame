@@ -1,14 +1,9 @@
 #include "stdafx.h"
 #include "Renderer.h"
-
-#define MAP_SIZE 24
+#include "../Game/Stage.h"
 
 //전역변수 선언
-static char s_map[MAP_SIZE][MAP_SIZE] = {
-	"*************" ,
-	"* sokoban   *" ,
-	"*************"
-};
+static char s_map[MAP_SIZE][MAP_SIZE];
 static HANDLE s_consoleHandle;
 
 void clear()
@@ -56,6 +51,8 @@ void RenderMap()
 	SetConsoleCursorPosition(s_consoleHandle, initialPos);	//지정된 콘솔 화면 버퍼에서 커서 위치를 설정
 	SetConsoleCursorInfo(s_consoleHandle, &info);	// 콘솔 커서의 형태 (두께 or 노출여부) 를 설정하는 역할
 
+	const char** stage = GetMap();
+	memcpy(s_map, stage, sizeof(s_map));
 
 
 	for (size_t i = 0; i < MAP_SIZE; ++i)
@@ -67,12 +64,12 @@ void RenderMap()
 	
 }
 
-void SetMessage(const char* message)
-{
-	strcpy_s(s_map[0], MAP_SIZE, message);
-}
-
-void SetKeyMessage(int32_t keyCode)
-{
-	sprintf_s(s_map[0], sizeof(s_map[0]), "%c키가 눌림", keyCode);
-}
+//void SetMessage(const char* message)
+//{
+//	strcpy_s(s_map[0], MAP_SIZE, message);
+//}
+//
+//void SetKeyMessage(int32_t keyCode)
+//{
+//	sprintf_s(s_map[0], sizeof(s_map[0]), "%c키가 눌림", keyCode);
+//}

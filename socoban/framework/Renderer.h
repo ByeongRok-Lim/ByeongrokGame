@@ -14,4 +14,4 @@ bool InitializeRenderer();
 /// <returns></returns>
 void RenderMap();
 
-void SetMessage(const char* message);
+//void SetMessage(const char* message);

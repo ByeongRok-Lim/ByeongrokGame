@@ -1,6 +1,8 @@
 #pragma once
+
 #include <stdbool.h>
 #include <stdint.h>
+
 typedef enum KeyCode
 {
 	KEYCODE_W = 'W',

@@ -23,7 +23,7 @@ void UpdateInput()
 {
 	memcpy(s_prevKeyStates, s_currentKeyStates, sizeof(s_prevKeyStates));
 
-	for (int32_t keyCode = 0; keyCode < 255; ++keyCode)
+	for (int32_t keyCode = 0; keyCode < 256; ++keyCode)
 	{
 		if (isKeyDown(keyCode))
 		{
@@ -34,7 +34,7 @@ void UpdateInput()
 			s_currentKeyStates[keyCode] = false;
 		}
 		
-		GetAsyncKeyState(keyCode); 
+		//GetAsyncKeyState(keyCode); 
 		//3가지 상태값을 반환한다.
 		// 0x8000 => 0b 1000 0000 0000 0000 => 눌린 상태
 		// 0x0001 => 0b 1000 0000 0000 0001 => 계속 눌린 상태
