@@ -3,24 +3,36 @@
 
 #define MAP_SIZE 24
 
+//전역변수 선언
 static char s_map[MAP_SIZE][MAP_SIZE] = {
-	"*************",
-	"* sokoban   *",
+	"*************" ,
+	"* sokoban   *" ,
 	"*************"
 };
 static HANDLE s_consoleHandle;
 
-//SetConsolePosition 걍 남긴거
-//GetStdHandle 걍 남긴거
-bool InitializeRenderer()
+void clear()
 {
-	s_consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	memset(s_map, ' ', sizeof(s_map));
+
+	for (size_t i = 0; i < MAP_SIZE; ++i)
+	{
+		s_map[i][MAP_SIZE - 1] = '\0';
+	}
+}
+
+
+/*************************************************************
+* 설명 : 렌더러(Renderer)를 초기화하는 함수
+**************************************************************/
+bool InitializeRenderer()
+{	//GetStdHandle => 표준 디바이스에 대한 핸들 검색
+	s_consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);		//표준 출력 디바이스
 	
-	if (INVALID_HANDLE_VALUE == s_consoleHandle)
+	if (INVALID_HANDLE_VALUE == s_consoleHandle)		//함수 실패 반환 값이 s_consoleHandle
 	{
 		return false;
 	}
-
 	/*CONSOLE_CURSOR_INFO	info;
 	info.dwSize = 100;
 	info.bVisible = false;
@@ -29,24 +41,33 @@ bool InitializeRenderer()
 	{
 		return false;
 	}*/
-
 	return true;
 }
 
-//테어링이 나타나는 현상은 우리가보는 화면에 다음프레임이 출력되어 찢어지는 현상이 나타나는것.
-//double buffering을 이용하여 다음 프레임은 back buffer에 두고 현재 버퍼와 스위치하는 것 => 그러면 화면이 끊기는 현상이 줄어든다.
-//핵심은 버퍼를 두개 사용한다.
+
+/*************************************************************
+* 설명 : 맵을 그리는 함수
+**************************************************************/
 void RenderMap()
 {
-	const static COORD initialPos = { 0, 0 };
-	const static CONSOLE_CURSOR_INFO info = {100, false};
-	SetConsoleCursorPosition(s_consoleHandle, initialPos);
-	SetConsoleCursorInfo(s_consoleHandle, &info);
+	const static COORD initialPos = { 0, 0 }; //콘솔 화면 버퍼에서 문자 셀의 좌표를 정의.
+	const static CONSOLE_CURSOR_INFO info = {100, false};	//콘솔창에서 커서 on/off
+	SetConsoleCursorPosition(s_consoleHandle, initialPos);	//지정된 콘솔 화면 버퍼에서 커서 위치를 설정
+	SetConsoleCursorInfo(s_consoleHandle, &info);	// 콘솔 커서의 형태 (두께 or 노출여부) 를 설정하는 역할
 
 	//memcpy(s_map, s_backBuffer, sizeof(s_map));
 
-	for (int i = 0; i < MAP_SIZE; i++)
+	for (size_t i = 0; i < MAP_SIZE; i++)
 	{
-		puts(s_map[i]);
-	}
+		puts(s_map[i]);		//초당 MAP_SIZE만큼 출력
+		
+	}	
+	clear();
+	
+}
+
+
+void SetKeyMessage(int32_t keyCode)
+{
+	sprintf_s(s_map[0], sizeof(s_map[0]), "%c키가 눌림", keyCode);
 }

@@ -1,12 +1,12 @@
 #pragma once
 #include <stdbool.h>
-
+#include <stdint.h>
 typedef enum KeyCode
 {
-	W = 'w',
-	A = 'a',
-	S = 's',
-	D = 'd'
+	KEYCODE_W = 'W',
+	KEYCODE_A = 'A',
+	KEYCODE_S = 'S',
+	KEYCODE_D = 'D'
 } EKeyCode;
 
 /// <summary>
@@ -33,4 +33,4 @@ bool GetButtonUp(EKeyCode keyCode);
 /// </summary>
 /// <param name = "keyCode" > 가상 키 코드 </param>
 /// <return 눌렀다면 true, 아니면 false</return>
-bool GetButoon(EKeyCode keyCode);
+bool GetButton(EKeyCode keyCode);
