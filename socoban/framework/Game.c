@@ -4,7 +4,9 @@
 #include "Renderer.h"
 #include "input.h"
 #include "Timer.h"
-#include "../Game/Stage.h";
+#include "Game/Stage.h";
+
+static EStageLevel gameStage = STAGE_01;
 /*************************************************************
 * 설명 : 게임과 관련된 데이터를 초기화 하는 함수.
 **************************************************************/
@@ -19,6 +21,7 @@ bool Initialize()
 	LoadStage(STAGE_01);	//스테이지 로딩
 	return true;
 }
+
 /****************************************************************
 * 설명 : 게임 전체에서의 입력처리를 해준다.
 *****************************************************************/
@@ -27,6 +30,9 @@ void processInput()
 	UpdateInput();
 }
 
+/****************************************************************
+* 설명 : 게임 중에 변화하는 상태들을 업데이트한다.
+*****************************************************************/
 void update()
 {
 	UpdateStage();
@@ -65,9 +71,6 @@ void render()
 *****************************************************************/
 int32_t Run()
 {
-	//Game Loop = 플레이어로부터의 입력을 하드웨어와 분리시킨다.
-	//구글에 게임프로그래밍 패턴이라고 검색 ㄱㄱㄱ
-	
 	//Game Loop의 전체를 Frame
 	while (true)
 	{
@@ -80,6 +83,17 @@ int32_t Run()
 		update();
 		//렌더링
 		render();
+		if (ClearCondition() == 0)
+		{
+			clearStage();
+			gameStage++;
+			if (gameStage == STAGE_MAX) 
+			{
+				break;
+			}
+			LoadStage(gameStage);
+		}
+		
 	}
 	return 0;
 

@@ -4,6 +4,10 @@
 static bool s_currentKeyStates[256] = { false };
 static bool s_prevKeyStates[256] = { false };
 
+/*************************************************************
+* 설명 : 키가 눌렸는 상태인지 확인한다.
+**************************************************************/
+
 bool isKeyDown(int32_t keyCode)
 {
 	if (0x8000 & GetAsyncKeyState(keyCode))
@@ -47,7 +51,9 @@ void UpdateInput()
 
 	}
 }
-
+/*************************************************************
+* 설명 : 현재 프레임에 버튼이 눌렀는지 체크한다.
+**************************************************************/
 bool GetButtonDown(EKeyCode keyCode)
 {
 	if (false == s_prevKeyStates[keyCode] && s_currentKeyStates[keyCode])	//키코드에 인덱스를 부여하여 사용
@@ -60,6 +66,9 @@ bool GetButtonDown(EKeyCode keyCode)
 	}
 }
 
+/*************************************************************
+* 설명 : 현재 프레임에 버튼이 떼었는지 체크한다.
+**************************************************************/
 bool GetButtonUp(EKeyCode keyCode)
 {
 	if (s_prevKeyStates[keyCode] && false == s_currentKeyStates[keyCode])
@@ -71,6 +80,10 @@ bool GetButtonUp(EKeyCode keyCode)
 		return false;
 	}
 }
+
+/*************************************************************
+* 설명 : 버튼이 계속 눌렸는지 체크한다.
+**************************************************************/
 bool GetButton(EKeyCode keyCode)
 {
 	if (s_prevKeyStates[keyCode] && s_currentKeyStates[keyCode])

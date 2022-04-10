@@ -9,7 +9,7 @@ typedef enum MapType
 {
 	MAPTYPE_WALL = '#',
 	MAPTYPE_PLAYER = 'P',
-	MAPTYPE_BOX = 'a',
+	MAPTYPE_BOX = 'B',
 	MAPTYPE_GOAL = 'O',
 	MAPTYPE_BOX_ON_GOAL = '@',
 	MAPTYPE_PATH = ' '
@@ -18,6 +18,8 @@ typedef enum MapType
 typedef enum StageLevel
 {
 	STAGE_01 = 1,
+	STAGE_02,
+	STAGE_03,
 	STAGE_MAX
 }EStageLevel;
 
@@ -35,3 +37,22 @@ void UpdateStage();
 ///맵을 반환한다.
 ///</summary>
 const char** GetMap();
+
+///<summary>
+///플레이어를 x또는 y만큼 이동 시킨다.
+///</summary>
+///<param name = "x" > 이동할 x 좌표 </param>
+///<param name = "y" > 이동할 y 좌표 </param>
+void PlayerMove(int x, int y);
+
+///<summary>
+///플레이어가 이동할때의 예외처리를 하는 함수.
+///</summary>
+///<param name = "x" > 이동할 x 좌표 </param>
+///<param name = "y" > 이동할 y 좌표 </param>
+void MoveException(int x, int y);
+
+///<summary>
+/// 게임이 끝났는지 검사한다.
+///</summary>
+int ClearCondition();

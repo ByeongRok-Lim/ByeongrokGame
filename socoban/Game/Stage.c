@@ -1,14 +1,17 @@
 #include "stdafx.h"
 #include "Stage.h"
+#include "framework/input.h"
 
 static char s_map[MAP_SIZE][MAP_SIZE];
-static int32_t s_goalCount = 0;		//목표갯수
+static int32_t s_goalCount = 0;			//목표갯수
 static int32_t s_boxOnGoalCount = 0;	//현재 맞는 갯수
 static int32_t s_playerX = 0;	//플레이어 좌표 x
 static int32_t s_playerY = 0;	//플레이어 좌표 y
-static EStageLevel stage;
+static EStageLevel gameStage = STAGE_01;	//초기 stage
 
-
+/*************************************************************
+* 설명 : 맵이 로드 될 때, 맵 타입별 해야하는 일을 설정해준다.
+**************************************************************/
 bool parseMapType(int i, int j, char mapType)
 {
 	if (mapType == '\0' || mapType == '\n')
@@ -19,38 +22,17 @@ bool parseMapType(int i, int j, char mapType)
 	// 각 맵 타입별로 해줘야 하는 일들
 	switch (mapType)
 	{
-
-	case MAPTYPE_WALL:
-		//플레이어는  이동불가
-		//내가 플레이어의 위치 = -입력값
-		return true;
-	case MAPTYPE_PLAYER: {
+	case MAPTYPE_PLAYER:
 		s_playerX = j;
 		s_playerY = i;
-	}
-					   //플레이어 값
-		return true;
-	case MAPTYPE_BOX:
-		//플레이어가 밀면 그 방향으로 박스가 밀린다.
-		//캐릭터 + 박스 + 벽이면 그대로
-		return true;
+		break;
 	case MAPTYPE_GOAL:
-		//박스를 밀고 있는 채로 올라온다면 -> BOX_ON_GOAL로 변경
-		//그냥 지나가면 무시
-		return true;
-	case MAPTYPE_BOX_ON_GOAL:
-		// 이동불가능하게 설정하고 GET POINT
-		if (s_boxOnGoalCount == s_goalCount)
-		{
-
-		}
-		return true;
-	case MAPTYPE_PATH:
+		s_goalCount++;
 		return true;
 	default:
-		return false;
+		s_map[i][j] = mapType;
 	}
-	//반환 행에 다다랏을 때 
+	return true;
 }
 
 /*************************************************************
@@ -67,8 +49,6 @@ void clearStage()
 	s_boxOnGoalCount = 0;
 	s_playerX = 0;	
 	s_playerY = 0;
-
-
 }
 /*************************************************************
 * 설명 : 스테이지를 로딩한다.
@@ -107,21 +87,104 @@ void LoadStage(EStageLevel level)
 }
 
 
-
+/******************************************************************
+* 설명 : 스테이지를 로드할 때, 키 input에 따른 이동경로를 정해준다.
+*******************************************************************/
 void UpdateStage()
 {
-	//입력에 대해서 처리를 함.
-	//게임이 클리어 됐는지도 파악함.
+	if (GetButtonDown(KEYCODE_W)) 
+	{
+		MoveException(0, -1);
+	}
+	else if (GetButtonDown(KEYCODE_D)) 
+	{
+		MoveException(1, 0);
+	}
+	else if (GetButtonDown(KEYCODE_S))
+	{
+		MoveException(0, 1);
+	}
+	else if (GetButtonDown(KEYCODE_A))
+	{
+		MoveException(-1, 0);
+	}
+	else if (GetButtonDown(KEYCODE_R))
+	{
+		LoadStage(gameStage);
+	}
 }
 
-
-// 1. 소코반 게임 완성
-// 2. 스테이지 여러 개 추가
-// 3. 연출 넣어보기 = > advanced
-// 4. 컨텐츠를 추가하기 =>advanced
-
+/**********************************************************
+* 설명 : 맵을 반환한다.
+***********************************************************/
 const char** GetMap()
 {
 	return s_map;
 }
 
+
+/**********************************************************
+* 설명 : 플레이어를 x또는 y만큼 이동 시킨다.
+***********************************************************/
+void PlayerMove(int x, int y)
+{
+	
+	s_map[s_playerY][s_playerX] = MAPTYPE_PATH;
+	s_playerX += x;
+	s_playerY += y;
+	s_map[s_playerY][s_playerX] = MAPTYPE_PLAYER; //이동 끝
+}
+
+/**********************************************************
+* 설명 : 플레이어가 이동할때의 예외처리를 하는 함수.
+***********************************************************/
+void MoveException(int x, int y)
+{
+	char originPoint = s_map[s_playerY][s_playerX];
+	char getMapPoint = s_map[s_playerY + y][s_playerX + x];
+	char nextBoxPoint = s_map[s_playerY + (y*2)][s_playerX + (x * 2)];
+	if (getMapPoint == MAPTYPE_WALL)
+	{
+		return;
+	}
+	if (getMapPoint == MAPTYPE_BOX)
+	{
+		if (nextBoxPoint != MAPTYPE_WALL)
+		{
+			s_map[s_playerY][s_playerX] = MAPTYPE_PATH;
+			if (nextBoxPoint == MAPTYPE_GOAL)
+			{
+				s_map[s_playerY + (y * 2)][s_playerX + (x * 2)] = MAPTYPE_BOX_ON_GOAL;
+				s_boxOnGoalCount++;
+			}
+			else if (nextBoxPoint == MAPTYPE_BOX)
+			{
+				s_map[s_playerY][s_playerX] = MAPTYPE_PLAYER;
+				return;
+			}
+			else
+			{
+				s_map[s_playerY + (y * 2)][s_playerX + (x * 2)] = MAPTYPE_BOX;
+			}
+			PlayerMove(x, y);
+		}
+		
+	}
+	else 
+	{
+		PlayerMove(x, y);
+	}
+	
+}
+/**********************************************************
+* 설명 : 게임이 끝났는지 검사한다.
+***********************************************************/
+int ClearCondition()
+{
+	if (s_boxOnGoalCount == s_goalCount)
+	{
+		gameStage++;
+		return 0;
+	}
+	return 1;
+}

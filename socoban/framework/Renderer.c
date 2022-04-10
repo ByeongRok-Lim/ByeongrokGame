@@ -2,10 +2,12 @@
 #include "Renderer.h"
 #include "../Game/Stage.h"
 
-//전역변수 선언
-static char s_map[MAP_SIZE][MAP_SIZE];
-static HANDLE s_consoleHandle;
+static char s_map[MAP_SIZE][MAP_SIZE];	//맵 설정
+static HANDLE s_consoleHandle;			//핸들 설정
 
+/*************************************************************
+* 설명 : 맵을 초기화 한다.
+**************************************************************/
 void clear()
 {
 	memset(s_map, ' ', sizeof(s_map));
@@ -18,7 +20,7 @@ void clear()
 
 
 /*************************************************************
-* 설명 : 렌더러(Renderer)를 초기화하는 함수
+* 설명 : 렌더러(Renderer)를 초기화한다.
 **************************************************************/
 bool InitializeRenderer()
 {	//GetStdHandle => 표준 디바이스에 대한 핸들 검색
@@ -28,14 +30,6 @@ bool InitializeRenderer()
 	{
 		return false;
 	}
-	/*CONSOLE_CURSOR_INFO	info;
-	info.dwSize = 100;
-	info.bVisible = false;
-
-	if (false == SetConsoleCursorInfo(s_consoleHandle, &info))
-	{
-		return false;
-	}*/
 	return true;
 }
 
@@ -58,7 +52,6 @@ void RenderMap()
 	for (size_t i = 0; i < MAP_SIZE; ++i)
 	{
 		puts(s_map[i]);		//초당 MAP_SIZE만큼 출력
-		
 	}	
 	clear();
 	

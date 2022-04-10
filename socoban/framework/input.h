@@ -3,12 +3,17 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+/// <summary>
+/// 사용할 키를 설정한다.
+/// </summary>
 typedef enum KeyCode
 {
 	KEYCODE_W = 'W',
 	KEYCODE_A = 'A',
 	KEYCODE_S = 'S',
-	KEYCODE_D = 'D'
+	KEYCODE_D = 'D',
+	KEYCODE_R = 'R'
+
 } EKeyCode;
 
 /// <summary>
@@ -36,3 +41,4 @@ bool GetButtonUp(EKeyCode keyCode);
 /// <param name = "keyCode" > 가상 키 코드 </param>
 /// <return 눌렀다면 true, 아니면 false</return>
 bool GetButton(EKeyCode keyCode);
+
