@@ -8,6 +8,7 @@ static int32_t s_boxOnGoalCount = 0;	//현재 맞는 갯수
 static int32_t s_playerX = 0;	//플레이어 좌표 x
 static int32_t s_playerY = 0;	//플레이어 좌표 y
 static EStageLevel gameStage = STAGE_01;	//초기 stage
+static bool s_IsOnGoal = false;		//목표 0 의 위인지 체크
 
 /*************************************************************
 * 설명 : 맵이 로드 될 때, 맵 타입별 해야하는 일을 설정해준다.
@@ -69,15 +70,12 @@ void LoadStage(EStageLevel level)
 	{
 		for (size_t j = 0; j < MAP_SIZE; ++j)
 		{
-
 			char ch = fgetc(fp);
 			if (false == parseMapType(i, j, ch))
 			{
 				break;
 			}
-			
 		}
-
 		if (feof(fp))
 		{
 			break;
@@ -128,8 +126,15 @@ const char** GetMap()
 ***********************************************************/
 void PlayerMove(int x, int y)
 {
-	
-	s_map[s_playerY][s_playerX] = MAPTYPE_PATH;
+	if (s_IsOnGoal == true)
+	{
+		s_map[s_playerY][s_playerX] = MAPTYPE_GOAL;
+		s_IsOnGoal = false;
+	}
+	else 
+	{
+		s_map[s_playerY][s_playerX] = MAPTYPE_PATH;
+	}
 	s_playerX += x;
 	s_playerY += y;
 	s_map[s_playerY][s_playerX] = MAPTYPE_PLAYER; //이동 끝
@@ -143,37 +148,68 @@ void MoveException(int x, int y)
 	char originPoint = s_map[s_playerY][s_playerX];
 	char getMapPoint = s_map[s_playerY + y][s_playerX + x];
 	char nextBoxPoint = s_map[s_playerY + (y*2)][s_playerX + (x * 2)];
-	if (getMapPoint == MAPTYPE_WALL)
+	if (getMapPoint != MAPTYPE_GOAL)
 	{
-		return;
-	}
-	if (getMapPoint == MAPTYPE_BOX)
-	{
-		if (nextBoxPoint != MAPTYPE_WALL)
+		if (getMapPoint == MAPTYPE_WALL)
 		{
-			s_map[s_playerY][s_playerX] = MAPTYPE_PATH;
-			if (nextBoxPoint == MAPTYPE_GOAL)
+			return;
+		}
+		if (getMapPoint == MAPTYPE_BOX_ON_GOAL)
+		{	
+			if (nextBoxPoint != MAPTYPE_WALL)
 			{
+				s_map[s_playerY + y][s_playerX + x] = MAPTYPE_PLAYER;
+				//1. '@' 밀어냈을 때 있던 곳이 O가 되는거
+				s_IsOnGoal = true;
+				//2. 박스 - 박스 충돌
+				
+				//3. 박스 - '@' 충돌
+				//4. 박스 - 벽 충돌
 				s_map[s_playerY + (y * 2)][s_playerX + (x * 2)] = MAPTYPE_BOX_ON_GOAL;
-				s_boxOnGoalCount++;
-			}
-			else if (nextBoxPoint == MAPTYPE_BOX)
-			{
-				s_map[s_playerY][s_playerX] = MAPTYPE_PLAYER;
-				return;
 			}
 			else
 			{
-				s_map[s_playerY + (y * 2)][s_playerX + (x * 2)] = MAPTYPE_BOX;
+				return;
 			}
+		}
+		if (getMapPoint == MAPTYPE_BOX && nextBoxPoint == MAPTYPE_BOX_ON_GOAL)
+		{
+			return;
+		}
+
+		if (getMapPoint == MAPTYPE_BOX)
+		{
+			if (nextBoxPoint != MAPTYPE_WALL)
+			{
+				s_map[s_playerY][s_playerX] = MAPTYPE_PATH;
+				if (nextBoxPoint == MAPTYPE_GOAL)
+				{
+					s_map[s_playerY + (y * 2)][s_playerX + (x * 2)] = MAPTYPE_BOX_ON_GOAL;
+					s_boxOnGoalCount++;
+				}
+				else if (nextBoxPoint == MAPTYPE_BOX)
+				{
+					s_map[s_playerY][s_playerX] = MAPTYPE_PLAYER;
+					return;
+				}
+				else
+				{
+					s_map[s_playerY + (y * 2)][s_playerX + (x * 2)] = MAPTYPE_BOX;
+				}
+				PlayerMove(x, y);
+			}
+		}
+		else
+		{
 			PlayerMove(x, y);
 		}
-		
 	}
-	else 
+	else if (getMapPoint == MAPTYPE_GOAL)
 	{
 		PlayerMove(x, y);
+		s_IsOnGoal = true;
 	}
+	
 	
 }
 /**********************************************************
